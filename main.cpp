@@ -5,7 +5,7 @@ SemaphoreHandle_t logMutex = NULL;
 
 void setup() {
     Serial.begin(115200);
-    randomSeed((uint32_t)esp_random());
+    delay(200);
 
     logMutex = xSemaphoreCreateMutex();
     if (logMutex == NULL) {
@@ -14,9 +14,7 @@ void setup() {
             delay(1000);
         }
     }
-
     
-
     sdReady = initSDCard();
 }
 
@@ -26,7 +24,6 @@ void loop() {
         return;
     }
 
-    uint32_t now = millis();
     if (now - lastWriteTime >= WRITE_INTERVAL_MS) {
         lastWriteTime = now;
         LogWriteBuffer();
