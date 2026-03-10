@@ -11,9 +11,12 @@ extern const uint32_t WRITE_INTERVAL_MS;
 extern uint32_t lastWriteTime;
 extern bool sdReady;
 
-extern char logBuffer[512];
+extern char csvLogBuffer[65536]; // 64KB buffer for log entries
 extern size_t logBufferlen;
 
 bool initSDCard();
 bool LogWriteBuffer();
-void setColumnValue(const char* name, float value);
+bool initRockblockBuffer();
+bool sendRockblockBuffer();
+void writeDataToBuffer(const char* name, float value);
+void randomSensorData();
