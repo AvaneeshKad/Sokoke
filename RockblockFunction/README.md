@@ -17,7 +17,7 @@ A single sensor snapshot. The struct is `__attribute__((packed))` to eliminate p
 
 | Field      | Type       | Description                          |
 |------------|------------|--------------------------------------|
-| `time`     | `uint64_t` | Unix timestamp (ms) |
+| `time`     | `uint64_t` | Milliseconds since device boot (uptime; e.g., from `millis()`) |
 | `temp`     | `float`    | Temperature reading; `InvalidTemp` if unavailable |
 | `pressure` | `float`    | Pressure reading; `InvalidPressure` if unavailable |
 
