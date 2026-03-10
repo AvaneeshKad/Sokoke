@@ -95,7 +95,7 @@ bool LogWriteBuffer() { // Write log buffer to SD card and clear buffer
         return false;
     }
 
-    size_t bytesWritten = logFile.write((const uint8_t*)logBuffer, logBufferlen);
+    size_t bytesWritten = logFile.write((const uint8_t*)LogBuffer, logBufferlen);
     logFile.close();
 
     if (bytesWritten != logBufferlen) {
