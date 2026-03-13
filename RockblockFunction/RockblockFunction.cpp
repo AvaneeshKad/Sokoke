@@ -54,9 +54,9 @@ void add_entry(Table *t, TableEntry e) {
     t->entries[t->size++] = e;
 }
 
-Table *add_sensor_data(Table *t, uint64_t time, float temp, float pressure) {
+Table *add_sensor_data(Table *t, uint64_t time, float temperature, float humidity) {
     t = checkTable(t);
-    add_entry(t, (TableEntry){ .time = time, .temp = temp, .pressure = pressure });
+    add_entry(t, (TableEntry){ .time = time, .temperature = temperature, .humidity = humidity });
     return t;
 }
 
@@ -112,14 +112,14 @@ void send_table(Table *t) {
 
     size_t size = table_memsize(t);
 
-    // Serial.printf("Sending table with %u entries, size %u bytes\n", t->size, size);
+    Serial.printf("Sending table with %u entries, size %u bytes\n", t->size, size);
 
-    int status = IridiumModem.sendSBDBinary((uint8_t *)st, size);
+    // int status = IridiumModem.sendSBDBinary((uint8_t *)st, size);
 
-    if (status != 0) {
-        Serial.print("Failed to send SBD message, error code: ");
-        Serial.println(status);
-    }
+    // if (status != 0) {
+    //     Serial.print("Failed to send SBD message, error code: ");
+    //     Serial.println(status);
+    // }
 
     free(st);
 }

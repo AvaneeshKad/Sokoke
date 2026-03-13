@@ -1,7 +1,14 @@
+/* ---------------------------- librrary includes --------------------------- */
+
 #include <Arduino.h>
 #include "SdFunction/SdFunction.h"
 #include "RockblockFunction/RockblockFunction.h"
 #include <freertos/FreeRTOS.h>
+#include <aht30Lib/driver_aht30.h>
+#include <aht30Lib/driver_aht30_basic.h>
+#include <aht30Function/aht30Function.h>
+
+/* ----------------------------------- IO ----------------------------------- */
 
 SemaphoreHandle_t logMutex = NULL;
 
@@ -19,11 +26,24 @@ void sdWriteTask(void*) {
     writeCore();
 }
 
+/* ----------------------------- core processes ----------------------------- */
 
 void readCore() {
     while (true) {
-        // randomSensorData(); // Test data generation
-        delay(10);
+
+        // AHT30 sensor
+        std::tuple<float, uint8_t, bool> sensorData = readAht30();
+        float temperature = std::get<0>(sensorData);
+        uint8_t humidity = std::get<1>(sensorData);
+        bool success = std::get<2>(sensorData);
+
+        if (success) {
+            writeDataToBuffer("temperature", temperature);
+            writeDataToBuffer("humidity", (float)humidity);
+        }
+        
+        // Other Sensors
+
     }
 }
 
@@ -44,28 +64,56 @@ void writeCore() {
     }
 }
 
+/* ------------------------------ inital setup ------------------------------ */
+
 void setup() {
     Serial.begin(115200);
     delay(200);
-    randomSeed((uint32_t)esp_random());
+    // randomSeed((uint32_t)esp_random());
 
-    logMutex = xSemaphoreCreateMutex(); // Create mutex 
+    /* ---------------------------------- inits --------------------------------- */
+
+
+    // Initialize AHT30 Temperature sensor
+
+    if (aht30_basic_init() != 0) {
+        Serial.println("Failed to initialize AHT30 sensor");
+        while (true) {
+            delay(1000);
+        }
+    }
+
+    // Initialize Mutex
+
+    logMutex = xSemaphoreCreateMutex(); 
     if (logMutex == NULL) {
         Serial.println("Failed to create mutex");
         while (true) {
             delay(1000);
         }
     }
+
+
+    // Initialize SD card
     
     sdReady = initSDCard();
     if (!sdReady) {
-        delay(1000);
-        return;
+        Serial.println("Failed to initialize SD card");
+        while (true) {
+            delay(1000);
+        }
     }
+
+    // Initialize rockblock buffer
 
     if (!initRockblockBuffer()) {
         Serial.println("Failed to initialize rockblock buffer");
+        while (true) {
+            delay(1000);
+        }
     }
+
+    /* --------------------------- Create pinned tasks -------------------------- */
 
     xTaskCreatePinnedToCore(
         sensorTask,
@@ -88,4 +136,5 @@ void setup() {
     );
 }
 
+// don't use
 void loop() {}
