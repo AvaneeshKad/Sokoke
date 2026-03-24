@@ -1,8 +1,11 @@
 // code courtesy of https://github.com/HogeyDev with slight modifications
 
 #include "RockblockFunction.h"
+#include "../Sensors.h"
 
 IridiumSBD IridiumModem(Serial1);
+
+
 
 Table *new_table() {
     Table *t = (Table *)malloc(sizeof(Table));
@@ -54,9 +57,10 @@ void add_entry(Table *t, TableEntry e) {
     t->entries[t->size++] = e;
 }
 
-Table *add_sensor_data(Table *t, uint64_t time, float temperature, float humidity) {
+// TODO: Deprecate
+Table *add_sensor_data(Table *t, uint64_t time, SensorDataType type, float data) {
     t = checkTable(t);
-    add_entry(t, (TableEntry){ .time = time, .temperature = temperature, .humidity = humidity });
+    add_entry(t, (TableEntry){ .time = time, .type = type, .data = data, });
     return t;
 }
 
@@ -82,6 +86,7 @@ SerializedTable serialize_table(Table *t) {
     return buffer;
 }
 
+// TEST: should only be used during testing
 Table *deserialize_table(SerializedTable t) {
     Table *table = (Table *)malloc(sizeof(Table));
     

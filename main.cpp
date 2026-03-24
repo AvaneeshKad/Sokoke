@@ -1,4 +1,4 @@
-/* ---------------------------- librrary includes --------------------------- */
+/* ---------------------------- library includes --------------------------- */
 
 #include <Arduino.h>
 #include "SdFunction/SdFunction.h"
@@ -7,6 +7,7 @@
 #include <aht30Lib/driver_aht30.h>
 #include <aht30Lib/driver_aht30_basic.h>
 #include <aht30Function/aht30Function.h>
+#include <BMP390/BMP390Function.h>
 
 /* ----------------------------------- IO ----------------------------------- */
 
@@ -38,10 +39,19 @@ void readCore() {
         bool success = std::get<2>(sensorData);
 
         if (success) {
-            writeDataToBuffer("temperature", temperature);
-            writeDataToBuffer("humidity", (float)humidity);
+            writeDataToBuffer("ATH30_temperature", temperature);
+            writeDataToBuffer("ATH30_humidity", (float)humidity);
         }
         
+        // BMP390 sensor
+
+        // bmp3_data bmp_data = Temp_Presure_Write_To_SD();
+        
+        // if (bmp_data.success) {
+        //     writeDataToBuffer("BMP390_temperature", (float)bmp_data.temperature);
+        //     writeDataToBuffer("BMP390_pressure", (float)bmp_data.pressure);
+        // }
+
         // Other Sensors
 
     }
@@ -82,6 +92,10 @@ void setup() {
             delay(1000);
         }
     }
+
+    // Initialize BMP390 Pressure sensor
+    // initBMP390();
+
 
     // Initialize Mutex
 
