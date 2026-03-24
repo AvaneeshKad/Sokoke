@@ -5,15 +5,23 @@
 #include "RockblockFunction/RockblockFunction.h"
 #include <freertos/FreeRTOS.h>
 
+/* ---------------------------- Invalid Constants --------------------------- */
+
 constexpr float InvalidTemperature = -512.0f;
 constexpr float InvalidHumidity = -1.0f;
 constexpr float InvalidPressure = -1.0f;
 
+constexpr float const INVALID_RESPONSES[] = { InvalidTemperature, InvalidPressure, InvalidTemperature, InvalidHumidity }; 
+
+/* ------------------------------ Sensor Names ------------------------------ */
+
+// Sensor count needs to be last
 typedef enum {
 	ATH30_Temperature,
 	ATH30_Humidity,
 	BMP390_Temperature,
 	BMP390_Pressure,
+    
 
 	SENSOR_COUNT,
 } SensorDataType;
@@ -27,5 +35,4 @@ inline const char *get_sensor_name(SensorDataType type) {
     };
     return names[type];
 }
-constexpr float const INVALID_RESPONSES[] = {InvalidTemperature, InvalidPressure, InvalidTemperature, InvalidHumidity};
 
