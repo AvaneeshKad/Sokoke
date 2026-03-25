@@ -62,6 +62,8 @@ inline const char *get_sensor_name(SensorDataType type) {
         "PressIns",
         "PressOut",
 
+        "Humidity",
+
         "PosX", "PosY", "PosZ",
         "AngAccel", "AngPos",
         "AccX", "AccY", "AccZ"

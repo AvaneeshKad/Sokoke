@@ -8,12 +8,12 @@
 #define SD_CS_PIN 5
 #define MUTEX_TIMEOUT_MS 5000
 
-const uint32_t WRITE_INTERVAL_MS = 60000; // 1 minute
+const uint32_t WRITE_INTERVAL_MS = 6000; // 1 minute
 const char* CSV_FILE_PATH = "/sensor_log.csv";
 uint32_t lastWriteTime = 0;
 bool sdReady = false;
 
-char csvLogBuffer[65536]; // 64KB buffer for log entries
+char csvLogBuffer[CSV_LOG_BUFFER_SIZE];
 size_t logBufferlen = 0;
 
 static const char *CSV_COLUMNS[SensorDataType::SENSOR_COUNT];

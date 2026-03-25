@@ -8,10 +8,12 @@
 #include <aht30Lib/driver_aht30_basic.h>
 #include <aht30Function/aht30Function.h>
 #include <BMP390/BMP390Function.h>
+#include <Adafruit_MPU6050.h>
 
 /* ----------------------------------- IO ----------------------------------- */
 
 SemaphoreHandle_t logMutex = NULL;
+Adafruit_MPU6050 mpu;
 
 void readCore();
 void writeCore();
@@ -39,10 +41,18 @@ void readCore() {
         bool success = std::get<2>(sensorData);
 
         if (success) {
-            writeDataToBuffer("ATH30_temperature", temperature);
-            writeDataToBuffer("ATH30_humidity", (float)humidity);
+            writeDataToBuffer("TempIns", temperature);
+            writeDataToBuffer("Humidity", (float)humidity);
         }
         
+        // MPU6050 sensor
+        sensors_event_t a, g, temp;
+        mpu.getEvent(&a, &g, &temp);
+        writeDataToBuffer("MPUTemp", temp.temperature);
+        writeDataToBuffer("AccX", a.acceleration.x);
+        writeDataToBuffer("AccY", a.acceleration.y);
+        writeDataToBuffer("AccZ", a.acceleration.z);
+
         // BMP390 sensor
 
         // bmp3_data bmp_data = Temp_Presure_Write_To_SD();
@@ -54,6 +64,8 @@ void readCore() {
 
         // Other Sensors
 
+
+        delay(10);
     }
 }
 
@@ -97,6 +109,13 @@ void setup() {
         }
     }
 
+    // Initialize MPU6050 sensor
+    if(!mpu.begin()) {
+        Serial.println("Failed to initialize MPU6050 sensor");
+        while (true) {
+            delay(1000);
+        }
+    }
 
     // Initialize BMP390 Pressure sensor
     // initBMP390();
