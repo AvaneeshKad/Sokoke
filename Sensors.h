@@ -10,29 +10,61 @@
 constexpr float InvalidTemperature = -512.0f;
 constexpr float InvalidHumidity = -1.0f;
 constexpr float InvalidPressure = -1.0f;
+constexpr float InvalidPosition = std::numeric_limits<float>::infinity();
 
-constexpr float const INVALID_RESPONSES[] = { InvalidTemperature, InvalidPressure, InvalidTemperature, InvalidHumidity }; 
+constexpr float const INVALID_RESPONSES[] = { 
+    InvalidTemperature,
+    InvalidTemperature,
+    InvalidTemperature,
+    InvalidTemperature,
+    InvalidTemperature,
+
+    InvalidPressure,
+    InvalidPressure,
+ 
+    InvalidHumidity,
+
+    InvalidPosition, InvalidPosition, InvalidPosition,
+    InvalidPosition, InvalidPosition,
+    InvalidPosition, InvalidPosition, InvalidPosition
+}; 
 
 /* ------------------------------ Sensor Names ------------------------------ */
 
 // Sensor count needs to be last
 typedef enum {
-	ATH30_Temperature,
-	ATH30_Humidity,
-	BMP390_Temperature,
-	BMP390_Pressure,
-    
+    TempIns,
+    TempOut,
+    BaroTempIns,
+    BaroTempOut,
+    MPUTemp,
 
-	SENSOR_COUNT,
+    PressIns,
+    PressOut,
+
+    Humidity,
+
+    PosX, PosY, PosZ,
+    AngAccel, AngPos,
+    AccX, AccY, AccZ,
+
+    SENSOR_COUNT,
 } SensorDataType;
 
 inline const char *get_sensor_name(SensorDataType type) {
     static const char *names[] = {
-        "ATH30_temperature",
-        "ATH30_humidity",
-        "BMP390_temperature",
-        "BMP390_pressure",
+        "TempIns",
+        "TempOut",
+        "BaroTempIns",
+        "BaroTempOut",
+        "MPUTemp",
+
+        "PressIns",
+        "PressOut",
+
+        "PosX", "PosY", "PosZ",
+        "AngAccel", "AngPos",
+        "AccX", "AccY", "AccZ"
     };
     return names[type];
 }
-

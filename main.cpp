@@ -16,7 +16,7 @@ SemaphoreHandle_t logMutex = NULL;
 void readCore();
 void writeCore();
 
-constexpr BaseType_t SENSOR_CORE_ID = 0;
+constexpr BaseType_t READ_CORE_ID = 0;
 constexpr BaseType_t WRITE_CORE_ID = 1;
 
 void sensorTask(void*) {
@@ -78,7 +78,11 @@ void writeCore() {
 
 void setup() {
     Serial.begin(115200);
-    delay(200);
+    
+    while(!Serial) {
+        delay(100);
+    }
+
     // randomSeed((uint32_t)esp_random());
 
     /* ---------------------------------- inits --------------------------------- */
@@ -92,6 +96,7 @@ void setup() {
             delay(1000);
         }
     }
+
 
     // Initialize BMP390 Pressure sensor
     // initBMP390();
@@ -136,7 +141,7 @@ void setup() {
         NULL,
         1,
         NULL,
-        SENSOR_CORE_ID
+        READ_CORE_ID
     );
     
     xTaskCreatePinnedToCore(
